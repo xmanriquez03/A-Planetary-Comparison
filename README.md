@@ -1,2 +1,563 @@
 # A-Planetary-Comparison
 Mars vs. Neptune: A Planetary Comparison
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Mars vs. Neptune – Planet Comparison Project</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    :root {
+      --bg: #050816;
+      --card: #0b1020;
+      --accent-red: #e25822;
+      --accent-blue: #3b82f6;
+      --accent-purple: #7c3aed;
+      --text-main: #f9fafb;
+      --text-muted: #9ca3af;
+      --border-subtle: #1f2933;
+      --shadow-soft: 0 18px 40px rgba(0,0,0,0.45);
+      --radius-xl: 1.3rem;
+      --radius-pill: 999px;
+      --font-main: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: var(--font-main);
+      background: radial-gradient(circle at top, #111827 0, #020617 55%, #000 100%);
+      color: var(--text-main);
+      line-height: 1.6;
+      padding: 1.5rem;
+    }
+
+    .page {
+      max-width: 1100px;
+      margin: 0 auto 3rem auto;
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 2.5rem;
+    }
+
+    .tagline {
+      display: inline-flex;
+      padding: 0.2rem 0.8rem;
+      border-radius: var(--radius-pill);
+      border: 1px solid rgba(148,163,184,0.6);
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      gap: 0.4rem;
+      align-items: center;
+    }
+
+    .tagline span {
+      width: 6px;
+      height: 6px;
+      border-radius: 999px;
+      background: linear-gradient(135deg, var(--accent-red), var(--accent-blue));
+    }
+
+    h1 {
+      font-size: clamp(2rem, 4vw, 2.8rem);
+      margin-top: 1rem;
+      margin-bottom: 0.5rem;
+      letter-spacing: 0.03em;
+    }
+
+    header p {
+      max-width: 640px;
+      margin: 0.25rem auto;
+      color: var(--text-muted);
+      font-size: 0.95rem;
+    }
+
+    main {
+      display: flex;
+      flex-direction: column;
+      gap: 1.75rem;
+    }
+
+    section {
+      background: linear-gradient(145deg, rgba(15,23,42,0.98), rgba(15,23,42,0.94));
+      border-radius: var(--radius-xl);
+      border: 1px solid var(--border-subtle);
+      padding: 1.5rem 1.7rem;
+      box-shadow: var(--shadow-soft);
+      backdrop-filter: blur(16px);
+    }
+
+    section h2 {
+      font-size: 1.35rem;
+      margin-bottom: 0.8rem;
+      display: flex;
+      align-items: center;
+      gap: 0.45rem;
+    }
+
+    section h2 span.icon {
+      font-size: 1.2rem;
+    }
+
+    .two-column {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 1.35rem;
+    }
+
+    @media (max-width: 768px) {
+      .two-column {
+        grid-template-columns: 1fr;
+      }
+      body {
+        padding: 1rem;
+      }
+    }
+
+    .planet-card {
+      background: radial-gradient(circle at top, rgba(248,250,252,0.04), transparent 55%);
+      border-radius: var(--radius-xl);
+      border: 1px solid rgba(148,163,184,0.35);
+      padding: 1.2rem 1.3rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .planet-image-wrapper {
+      margin-bottom: 0.7rem;
+      border-radius: 1rem;
+      overflow: hidden;
+      border: 1px solid rgba(148,163,184,0.4);
+      box-shadow: 0 12px 30px rgba(0,0,0,0.55);
+    }
+
+    .planet-image {
+      width: 100%;
+      display: block;
+    }
+
+    .planet-caption {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      padding: 0.3rem 0.4rem 0.2rem;
+      text-align: center;
+      background: radial-gradient(circle at top, rgba(15,23,42,0.95), rgba(15,23,42,0.9));
+    }
+
+    .planet-label {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      border-radius: var(--radius-pill);
+      padding: 0.25rem 0.75rem;
+      font-size: 0.8rem;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+
+    .planet-label.mars {
+      background: rgba(248,113,113,0.12);
+      color: #fecaca;
+      border: 1px solid rgba(248,113,113,0.5);
+    }
+
+    .planet-label.neptune {
+      background: rgba(96,165,250,0.12);
+      color: #bfdbfe;
+      border: 1px solid rgba(96,165,250,0.5);
+    }
+
+    .planet-name {
+      font-size: 1.25rem;
+      margin-top: 0.6rem;
+      margin-bottom: 0.4rem;
+      font-weight: 700;
+    }
+
+    .planet-type {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      margin-bottom: 0.7rem;
+    }
+
+    .fact-list {
+      list-style: none;
+      font-size: 0.92rem;
+    }
+
+    .fact-list li {
+      margin-bottom: 0.35rem;
+    }
+
+    .fact-label {
+      font-weight: 600;
+      color: #e5e7eb;
+    }
+
+    .planet-card::after {
+      content: "";
+      position: absolute;
+      width: 220px;
+      height: 220px;
+      border-radius: 999px;
+      right: -80px;
+      top: -90px;
+      opacity: 0.16;
+      filter: blur(1px);
+      background: radial-gradient(circle, rgba(248,250,252,0.9), transparent 60%);
+      pointer-events: none;
+    }
+
+    .planet-card.neptune::after {
+      right: -70px;
+      top: -80px;
+    }
+
+    .compare-grid {
+      margin-top: 0.7rem;
+      font-size: 0.9rem;
+    }
+
+    .compare-grid table {
+      width: 100%;
+      border-collapse: collapse;
+      overflow: hidden;
+      border-radius: 0.9rem;
+    }
+
+    .compare-grid th,
+    .compare-grid td {
+      padding: 0.65rem 0.8rem;
+      text-align: left;
+      border-bottom: 1px solid rgba(55,65,81,0.8);
+      vertical-align: top;
+    }
+
+    .compare-grid th {
+      background: rgba(15,23,42,0.95);
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: #9ca3af;
+    }
+
+    .compare-grid tbody tr:nth-child(odd) {
+      background: rgba(15,23,42,0.92);
+    }
+
+    .compare-grid tbody tr:nth-child(even) {
+      background: rgba(15,23,42,0.86);
+    }
+
+    .compare-grid td strong {
+      color: #e5e7eb;
+    }
+
+    .pill-note {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin-top: 0.6rem;
+    }
+
+    .fun-facts {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 1rem;
+      margin-top: 0.5rem;
+      font-size: 0.92rem;
+    }
+
+    .fun-fact-card {
+      background: rgba(15,23,42,0.95);
+      border-radius: 1rem;
+      border: 1px dashed rgba(148,163,184,0.5);
+      padding: 0.9rem 1rem;
+    }
+
+    .fun-fact-title {
+      font-weight: 600;
+      margin-bottom: 0.25rem;
+    }
+
+    .fun-fact-title.mars {
+      color: var(--accent-red);
+    }
+    .fun-fact-title.neptune {
+      color: var(--accent-blue);
+    }
+
+    .sources-list {
+      font-size: 0.88rem;
+      color: var(--text-muted);
+      padding-left: 1rem;
+    }
+
+    .sources-list li {
+      margin-bottom: 0.4rem;
+    }
+
+    .sources-list a {
+      color: #93c5fd;
+      text-decoration: none;
+    }
+
+    .sources-list a:hover {
+      text-decoration: underline;
+    }
+
+    .reflection-meta {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin-bottom: 0.6rem;
+    }
+
+    .reflection-body {
+      font-size: 0.96rem;
+      color: #e5e7eb;
+      white-space: pre-line;
+    }
+
+    footer {
+      text-align: center;
+      margin-top: 2.5rem;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <header>
+      <div class="tagline">
+        <span></span>
+        <div>ASTRONOMY PROJECT • TERRESTRIAL vs. OUTER PLANET</div>
+      </div>
+      <h1>Mars vs. Neptune: A Planetary Comparison</h1>
+      <p>
+        This webpage compares a terrestrial planet, <strong>Mars</strong>, with an outer ice giant,
+        <strong>Neptune</strong>, highlighting their physical properties, atmospheres, and orbital
+        characteristics. It also includes a brief reflection on the collaboration process behind the project.
+      </p>
+    </header>
+
+    <main>
+      <!-- Planet Overview Section -->
+      <section aria-labelledby="overview-heading">
+        <h2 id="overview-heading"><span class="icon">🪐</span>Planet Overviews</h2>
+        <p class="pill-note">
+          Mars and Neptune are both members of our solar system, but they represent very different types of planets.
+          Mars is a small, rocky terrestrial world, while Neptune is a distant ice giant composed mostly of gases and
+          ices rather than solid rock.
+        </p>
+
+        <div class="two-column" style="margin-top: 1.1rem;">
+          <!-- Mars Card -->
+          <article class="planet-card mars" aria-label="Mars fact sheet">
+            <div class="planet-image-wrapper">
+              <img
+                class="planet-image"
+                src="https://upload.wikimedia.org/wikipedia/commons/0/02/OSIRIS_Mars_true_color.jpg"
+                alt="True-color image of Mars"
+              />
+              <div class="planet-caption">
+                Mars in true color, imaged by ESA's Rosetta spacecraft (OSIRIS instrument). :contentReference[oaicite:0]{index=0}
+              </div>
+            </div>
+            <div class="planet-label mars">Terrestrial Planet</div>
+            <h3 class="planet-name">Mars – The Red Planet</h3>
+            <p class="planet-type">Fourth planet from the Sun • Thin CO₂ atmosphere • Cold desert world</p>
+            <ul class="fact-list">
+              <li><span class="fact-label">Diameter:</span> 6,779 km</li>
+              <li><span class="fact-label">Distance from Sun:</span> 1.52 AU (average)</li>
+              <li><span class="fact-label">Composition:</span> Rocky surface rich in iron oxide (“rust”)</li>
+              <li><span class="fact-label">Atmosphere:</span> Very thin; mostly carbon dioxide with traces of nitrogen and argon</li>
+              <li><span class="fact-label">Moons:</span> 2 small moons – Phobos and Deimos</li>
+              <li><span class="fact-label">Average Surface Temperature:</span> about −63°C (−81°F)</li>
+              <li><span class="fact-label">Notable Features:</span> Olympus Mons (largest volcano in the solar system), Valles Marineris canyon system</li>
+            </ul>
+          </article>
+
+          <!-- Neptune Card -->
+          <article class="planet-card neptune" aria-label="Neptune fact sheet">
+            <div class="planet-image-wrapper">
+              <img
+                class="planet-image"
+                src="https://upload.wikimedia.org/wikipedia/commons/0/06/Neptune.jpg"
+                alt="Voyager 2 full-disk image of Neptune"
+              />
+              <div class="planet-caption">
+                Neptune as seen by NASA’s Voyager 2 spacecraft in 1989. :contentReference[oaicite:1]{index=1}
+              </div>
+            </div>
+            <div class="planet-label neptune">Outer Planet – Ice Giant</div>
+            <h3 class="planet-name">Neptune – The Windy World</h3>
+            <p class="planet-type">Eighth planet from the Sun • Ice giant with extreme winds and storms</p>
+            <ul class="fact-list">
+              <li><span class="fact-label">Diameter:</span> 49,244 km</li>
+              <li><span class="fact-label">Distance from Sun:</span> 30.1 AU (average)</li>
+              <li><span class="fact-label">Composition:</span> Hydrogen, helium, and methane over icy materials and a rocky core</li>
+              <li><span class="fact-label">Atmosphere:</span> Thick methane-rich clouds with powerful storms and high-speed winds</li>
+              <li><span class="fact-label">Moons:</span> 14 known moons, including Triton, which orbits in the opposite direction of Neptune’s rotation</li>
+              <li><span class="fact-label">Average Temperature:</span> about −214°C (−353°F)</li>
+              <li><span class="fact-label">Notable Features:</span> Faint ring system and supersonic winds that are the fastest in the solar system</li>
+            </ul>
+          </article>
+        </div>
+      </section>
+
+      <!-- Comparison Section -->
+      <section aria-labelledby="compare-heading">
+        <h2 id="compare-heading"><span class="icon">⚖️</span>Compare &amp; Contrast: Mars vs. Neptune</h2>
+        <p class="pill-note">
+          Comparing a terrestrial world with an ice giant highlights how distance from the Sun, mass, and composition
+          all shape the environments of planets in our solar system.
+        </p>
+
+        <div class="compare-grid">
+          <table aria-describedby="compare-heading">
+            <thead>
+              <tr>
+                <th scope="col">Feature</th>
+                <th scope="col">Mars</th>
+                <th scope="col">Neptune</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Planet Type</strong></td>
+                <td>Small, rocky terrestrial planet with a solid surface.</td>
+                <td>Ice giant made mostly of gases and ices; no well-defined solid surface.</td>
+              </tr>
+              <tr>
+                <td><strong>Size</strong></td>
+                <td>Diameter of 6,779 km; significantly smaller than Earth.</td>
+                <td>Diameter of 49,244 km; about seven times wider than Mars.</td>
+              </tr>
+              <tr>
+                <td><strong>Distance from Sun</strong></td>
+                <td>1.52 AU, in the inner part of the outer solar system.</td>
+                <td>30.1 AU, over 30 times farther from the Sun than Earth.</td>
+              </tr>
+              <tr>
+                <td><strong>Atmosphere</strong></td>
+                <td>Thin CO₂ atmosphere; cannot hold much heat and offers little protection.</td>
+                <td>Deep, dense atmosphere rich in hydrogen, helium, and methane with complex cloud layers.</td>
+              </tr>
+              <tr>
+                <td><strong>Weather &amp; Storms</strong></td>
+                <td>Experiences global dust storms that can cover the entire planet.</td>
+                <td>Features extreme storms and the fastest winds in the solar system, reaching supersonic speeds.</td>
+              </tr>
+              <tr>
+                <td><strong>Moons &amp; Rings</strong></td>
+                <td>Two small moons; no rings.</td>
+                <td>Fourteen moons and faint rings made of dust and ice particles.</td>
+              </tr>
+              <tr>
+                <td><strong>Habitability</strong></td>
+                <td>Once had liquid water on the surface and may have been more habitable in the past.</td>
+                <td>Temperatures and pressures are far too extreme for human life as we know it.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="pill-note">
+          Overall, Mars shows how a small rocky planet can lose much of its atmosphere and become a cold desert,
+          while Neptune demonstrates the behavior of a massive, distant world dominated by deep atmospheres and violent weather.
+        </p>
+      </section>
+
+      <!-- Creativity / Fun Facts -->
+      <section aria-labelledby="fun-heading">
+        <h2 id="fun-heading"><span class="icon">✨</span>Fun Facts &amp; Big Ideas</h2>
+        <div class="fun-facts">
+          <div class="fun-fact-card">
+            <div class="fun-fact-title mars">Mars: Relics of a Wetter Past</div>
+            <p>
+              Evidence of dried-up river valleys, lakebeds, and minerals that form in water suggest that ancient Mars
+              was once warmer and wetter. Today, robotic missions are searching for signs of past microbial life in
+              this preserved geology.
+            </p>
+          </div>
+          <div class="fun-fact-card">
+            <div class="fun-fact-title neptune">Neptune: The Blue Wind Machine</div>
+            <p>
+              Neptune’s striking blue color comes from methane in its atmosphere, which absorbs red light and reflects
+              blue. High-altitude clouds, dark spots, and rapidly changing storms show that its atmosphere is extremely
+              dynamic even though sunlight is very weak so far from the Sun.
+            </p>
+          </div>
+        </div>
+        <p class="pill-note">
+          Studying both planets together helps astronomers test ideas about how atmospheres evolve on very different
+          worlds—from relatively small rocky planets close to the Sun to massive ice giants at the edge of the solar
+          system.
+        </p>
+      </section>
+
+      <!-- Sources Section -->
+      <section aria-labelledby="sources-heading">
+        <h2 id="sources-heading"><span class="icon">📚</span>Sources</h2>
+        <p class="pill-note">
+          At least two scholarly sources and a textbook were used to support the information on this page. NASA mission
+          data and peer-reviewed research articles provide reliable details about each planet’s atmosphere, structure,
+          and environment.
+        </p>
+        <ul class="sources-list">
+          <li>
+            NASA. (n.d.). <em>Mars – Facts</em>. NASA Science Solar System Exploration.
+            Retrieved from <a href="https://science.nasa.gov/mars/facts/" target="_blank" rel="noopener noreferrer">
+              https://science.nasa.gov/mars/facts/
+            </a> :contentReference[oaicite:2]{index=2}
+          </li>
+          <li>
+            NASA. (n.d.). <em>Neptune – Facts</em>. NASA Science Solar System Exploration.
+            Retrieved from <a href="https://science.nasa.gov/neptune/" target="_blank" rel="noopener noreferrer">
+              https://science.nasa.gov/neptune/
+            </a> :contentReference[oaicite:3]{index=3}
+          </li>
+          <li>
+            Irwin, P. G. J., et al. (2023). Latitudinal variations in methane abundance, aerosol opacity and aerosol
+            scattering efficiency in Neptune’s atmosphere determined from VLT/MUSE.
+            <em>Journal of Geophysical Research: Planets, 128</em>(11), e2023JE007980. :contentReference[oaicite:4]{index=4}
+          </li>
+          <li>
+            Girija, A. P. (2023). Comparative study of planetary atmospheres and implications for atmospheric entry
+            missions. <em>Journal of Spacecraft and Rockets</em>. (Preprint retrieved via ResearchGate.)
+          </li>
+          <li>
+            OpenStax. (2022). <em>Astronomy</em>. OpenStax, Rice University. (Textbook reference for general
+            concepts on terrestrial and outer planets.)
+          </li>
+        </ul>
+      </section>
+
+      <!-- Reflection Section -->
+      <section aria-labelledby="reflection-heading">
+        <h2 id="reflection-heading"><span class="icon">📝</span>Individual Reflection</h2>
+        <div class="reflection-meta">
+          Student: <strong>[Your Name]</strong> • Course: <strong>[Course Title]</strong> • Word Count: ~270
+        </div>
+        <div class="reflection-body">
+For this project I ended up taking on pretty much the whole thing from start to finish. I planned the layout for this web page, researched the main facts about Mars and Neptune using NASA and journal articles, chose the images, and organized the information so the comparison between a terrestrial planet and an ice giant was clear and easy to read. I also made sure the page matched the rubric by including supporting details, fun facts, and properly formatted sources.
+
+At the beginning, our group created a group message and even added our professor so everyone could coordinate tasks. After that, though, nobody responded or claimed any part of the assignment. I checked in more than once and still didn’t hear back from anyone. At that point I emailed the professor, explained what was going on, and got permission to go ahead and complete the project on my own. So even though this is technically a “group” project, the final product here represents my individual work.
+
+Overall, this experience taught me a lot about communication and taking initiative. In a perfect world, everyone contributes equally, but sometimes group work means being the person who steps up when no one else does. I learned that it’s better to reach out early, keep a record of your efforts, and ask the instructor for guidance instead of waiting and hoping things magically come together. It also reminded me that good organization and design can make complex science topics a lot more approachable for other students.
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      Mars vs. Neptune • Astronomy Compare/Contrast Project
+    </footer>
+  </div>
+</body>
+</html>
